@@ -1,0 +1,63 @@
+# --- Android/Java ---
+*.iml
+.gradle/
+local.properties
+/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.dex
+*.class
+*.log
+
+# --- IntelliJ/Android Studio ---
+.idea/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+*.iws
+*.ipr
+
+# --- macOS ---
+.DS_Store
+
+# --- VSCode ---
+.vscode/
+
+# --- Test output ---
+/test-output/
+
+# --- Generated files ---
+/generated/
+
+# --- Backup/Temp files ---
+*.bak
+*.tmp
+*~
+
+# --- OS/Editor swap files ---
+*.swp
+*.swo
+
+# --- Coverage reports ---
+coverage/
+
+# --- Node.js (in case of hybrid project) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Environment files ---
+.env
+.env.*
+
+# --- Package manager lock files ---
+package-lock.json
+yarn.lock

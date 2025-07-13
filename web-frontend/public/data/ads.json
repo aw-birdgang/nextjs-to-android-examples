@@ -1,0 +1,8 @@
+[
+  {
+    "id": "ua",
+    "type": "UA",
+    "title": "게임 앱 설치 시 300P, 실행 시 추가 100P",
+    "packageName": "com.example.targetapp"
+  }
+]

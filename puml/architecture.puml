@@ -1,0 +1,62 @@
+@startuml NextJS-to-Android Architecture
+
+!define RECTANGLE class
+
+package "Web Frontend (Next.js)" {
+    [Next.js App] as NextApp
+    [AdPage Component] as AdPage
+    [AdCard Component] as AdCard
+    [AdDetail Component] as AdDetail
+    [Global Styles] as Styles
+}
+
+package "Android SDK" {
+    [SampleAdSdk] as SDK
+    [SampleAdView] as AdView
+}
+
+package "Sample Android App" {
+    [MainActivity] as MainActivity
+}
+
+package "Network Layer" {
+    [HTTP/WebSocket] as Network
+}
+
+' Relationships
+NextApp --> AdPage : uses
+NextApp --> AdCard : uses
+NextApp --> AdDetail : uses
+NextApp --> Styles : applies
+
+MainActivity --> AdView : contains
+MainActivity --> SDK : initializes
+AdView --> Network : connects to
+Network --> NextApp : serves content
+
+' Data Flow
+AdView -down-> Network : HTTP Request
+Network -up-> AdView : HTML/JS/CSS
+AdView -right-> NextApp : renders content
+
+' Component Details
+note right of AdView
+  - WebView based
+  - JavaScript enabled
+  - Custom rendering
+end note
+
+note right of NextApp
+  - React components
+  - TypeScript
+  - Tailwind CSS
+  - App Router
+end note
+
+note right of MainActivity
+  - Loads WebView
+  - Connects to localhost:3000
+  - Displays web content
+end note
+
+@enduml
