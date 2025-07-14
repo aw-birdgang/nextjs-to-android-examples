@@ -1,17 +1,26 @@
 // src/types/ad.ts
-export type AdType =
-  | "expose"
-  | "sns"
-  | "ua"
-  | "app_inflow"
-  | "action"
-  | "live"
-  | "retargeting"
-  | "ranking";
+export type AdTypeKey =
+  | 'expose'
+  | 'sns'
+  | 'ua'
+  | 'app_inflow'
+  | 'action'
+  | 'live'
+  | 'retargeting'
+  | 'ranking';
+
+export interface AdTypeMeta {
+  key: AdTypeKey;
+  name: string;
+  description: string;
+  example: string;
+  image: string;
+  route: string;
+}
 
 export interface Ad {
   id: string;
-  type: AdType;
+  type: AdTypeKey;
   title: string;
   description: string;
   reward: string;

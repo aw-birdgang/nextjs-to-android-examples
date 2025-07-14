@@ -1,49 +1,33 @@
 "use client";
 
-import { useAdContext } from '../../../presentation/providers/AdProvider';
-import AdCard from '../../../components/AdCard';
+import { useState } from 'react';
+import ActionButton from './ActionButton';
+import RewardModal from './RewardModal';
+import {sendActionComplete} from "@/app/ads/action/dummy-action-api";
 
-export default function ActionPageClient() {
-  const { ads, loading, error } = useAdContext();
+export default function ActionAdPageClient() {
+  const [modal, setModal] = useState<{ open: boolean; status: 'success' | 'duplicate' | 'fail' | null }>({
+    open: false,
+    status: null,
+  });
 
-  // 액션 유도형 광고만 필터링
-  const actionAds = ads.filter(ad => ad.type === 'action');
-
-  if (loading) {
-    return (
-      <div style={{ padding: 24 }}>
-        <h1>액션 유도형 광고</h1>
-        <p>로딩 중...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ padding: 24 }}>
-        <h1>액션 유도형 광고</h1>
-        <p>오류: {error}</p>
-      </div>
-    );
-  }
-
-  if (actionAds.length === 0) {
-    return (
-      <div style={{ padding: 24 }}>
-        <h1>액션 유도형 광고</h1>
-        <p>현재 액션 유도형(action) 타입의 광고가 없습니다.</p>
-      </div>
-    );
-  }
+  // 외부 서비스 액션 완료 시 호출 (더미)
+  const handleActionComplete = async () => {
+    // 더미 API 호출 (userId, adId는 하드코딩)
+    const result = await sendActionComplete({ userId: 'user1', adId: 'ad123' });
+    setModal({ open: true, status: result });
+  };
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>액션 유도형 광고 리스트</h1>
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {actionAds.map((ad) => (
-          <AdCard key={ad.id} ad={ad} />
-        ))}
-      </div>
+    <div style={{ maxWidth: 400, margin: '40px auto', padding: 24, border: '1px solid #eee', borderRadius: 12 }}>
+      <h2>상담/가입/전화 유도 광고</h2>
+      <p>아래 버튼을 눌러 상담 또는 가입을 진행해보세요!</p>
+      <ActionButton onActionComplete={handleActionComplete} />
+      <RewardModal
+        open={modal.open}
+        status={modal.status}
+        onClose={() => setModal({ open: false, status: null })}
+      />
     </div>
   );
 }
