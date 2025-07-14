@@ -1,9 +1,3 @@
-
----
-
-필요에 따라 **프로젝트 설명, 기술 스택, Trouble Shooting, 기여 방법** 등을 자유롭게 추가/수정하셔도 좋습니다!  
-실제 프로젝트에 맞게 경로나 설명을 조정해 사용하세요.
-
 ---
 
 ## 1. Web Frontend (Next.js) 설치 및 실행
@@ -103,9 +97,4 @@ adb shell am start -n com.example.sample_app/.MainActivity
 - 추가적인 구조/아키텍처 설명은 [puml/architecture.puml](puml/architecture.puml) 참고
 
 ---
-
-## 7. 문의/기여
-
-- 이 프로젝트에 대한 문의, 개선 제안, 버그 리포트는 [Issues](https://github.com/your-repo/issues)로 남겨주세요.
-- PR 및 기여 환영합니다!
 
