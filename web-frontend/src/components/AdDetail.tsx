@@ -1,12 +1,7 @@
-import Image from 'next/image';
+"use client";
 
-interface Ad {
-  id: string;
-  title: string;
-  description: string;
-  reward: string;
-  image: string;
-}
+import Image from 'next/image';
+import { Ad } from '../domain/entities/Ad';
 
 interface AdDetailProps {
   ad: Ad;

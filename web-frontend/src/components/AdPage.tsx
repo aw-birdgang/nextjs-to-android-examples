@@ -1,4 +1,3 @@
-// components/AdPage.tsx
 import RewardButton from './RewardButton';
 
 export default function AdPage({ adType }: { adType: string }) {

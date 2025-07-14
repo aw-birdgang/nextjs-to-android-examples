@@ -1,0 +1,42 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam monochrome true
+skinparam backgroundColor #F9F9F9
+skinparam ArrowColor Black
+skinparam ArrowFontColor Black
+skinparam defaultFontName "Nanum Gothic"
+
+title SNS형 광고(공유/후기) 전체 구조 및 흐름
+
+actor User as "사용자"
+participant "광고 페이지 (프론트엔드)" as AdPage
+participant "SNS 플랫폼" as SNS
+participant "서버/백엔드" as Server
+database "DB" as DB
+
+== SNS 공유/후기 및 리워드 지급 흐름 ==
+
+User -> AdPage : 광고 페이지 접속
+AdPage -> User : "SNS 공유/후기 작성" 버튼 노출
+User -> AdPage : SNS 공유/후기 버튼 클릭
+AdPage -> SNS : SNS 공유/후기 창 오픈 (ex. window.open)
+User -> SNS : 인증샷 업로드/후기 작성
+SNS -> AdPage : (공유/후기 완료 콜백 or 수동 완료 버튼)
+AdPage -> Server : 공유/후기 내역 전송 (adId, userId, 인증 정보)
+activate Server
+Server -> DB : 공유/후기 내역 및 중복 체크
+DB --> Server : 결과(신규/중복)
+alt 신규 공유/후기
+    Server -> DB : 리워드 지급 기록 저장
+    Server --> AdPage : 리워드 지급 성공 응답
+    AdPage --> User : "리워드 지급 완료" 안내
+else 중복/실패
+    Server --> AdPage : 중복/실패 안내 응답
+    AdPage --> User : "이미 리워드 지급됨" 또는 "실패" 안내
+end
+deactivate Server
+
+@enduml

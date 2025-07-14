@@ -16,6 +16,7 @@ export interface Ad {
   description: string;
   reward: string;
   image: string;
+  example: string;
 }
 
 export interface RewardClaim {

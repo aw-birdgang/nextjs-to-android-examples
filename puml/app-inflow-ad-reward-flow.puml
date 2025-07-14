@@ -1,0 +1,39 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam monochrome true
+skinparam backgroundColor #F9F9F9
+skinparam ArrowColor Black
+skinparam ArrowFontColor Black
+skinparam defaultFontName "Nanum Gothic"
+
+title 앱 유입형 광고(앱 내 특정 기능/페이지 실행) 전체 구조 및 흐름
+
+actor User as "사용자"
+participant "광고 페이지 (프론트엔드)" as AdPage
+participant "설치된 앱" as InstalledApp
+participant "서버/백엔드" as Server
+database "DB" as DB
+
+== 앱 유입형 광고 흐름 ==
+
+User -> AdPage : 광고 페이지 접속
+AdPage -> User : "앱 기능 실행" 버튼(딥링크) 노출
+User -> InstalledApp : 딥링크 클릭 → 앱 내 특정 기능/페이지 실행
+InstalledApp -> Server : 기능/페이지 실행 정보 전송 (userId, adId 등)
+activate Server
+Server -> DB : 실행 내역 및 중복 체크
+DB --> Server : 결과(신규/중복)
+alt 신규 실행
+    Server -> DB : 리워드 지급 기록 저장
+    Server --> InstalledApp : 리워드 지급 성공 응답
+    InstalledApp --> User : "리워드 지급 완료" 안내
+else 중복/실패
+    Server --> InstalledApp : 중복/실패 안내 응답
+    InstalledApp --> User : "이미 리워드 지급됨" 또는 "실패" 안내
+end
+deactivate Server
+
+@enduml

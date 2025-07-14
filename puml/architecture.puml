@@ -1,38 +1,88 @@
-@startuml NextJS-to-Android Architecture
+@startuml NextJS-to-Android-Optimized
 
 !define RECTANGLE class
 
+' Web Frontend (Next.js)
 package "Web Frontend (Next.js)" {
     [Next.js App] as NextApp
-    [AdPage Component] as AdPage
-    [AdCard Component] as AdCard
-    [AdDetail Component] as AdDetail
+    [App Router] as AppRouter
+    [Pages] as Pages
+    [Components] as Components
+    [AdPage (Container)] as AdPage
+    [AdCard (Presentational)] as AdCard
+    [AdDetail (Presentational)] as AdDetail
+    [API Layer] as ApiLayer
+    [State Management (Zustand)] as StateMgmt
     [Global Styles] as Styles
+    [Utils] as WebUtils
+    [Domain Layer] as WebDomain
+    [Repository Layer] as WebRepo
+    [DataSource Layer] as WebDataSource
 }
 
+' Android SDK
 package "Android SDK" {
     [SampleAdSdk] as SDK
     [SampleAdView] as AdView
+    [AdRepository] as AdRepository
+    [AdDataSource] as AdDataSource
+    [SDK Utils] as SdkUtils
+    [Domain Layer] as AndroidDomain
+    [Repository Layer] as AndroidRepo
+    [DataSource Layer] as AndroidDataSource
 }
 
+' Sample Android App
 package "Sample Android App" {
     [MainActivity] as MainActivity
+    [AdViewModel] as AdViewModel
+    [DI (Hilt)] as DI
+    [UI Layer] as AndroidUI
 }
 
+' Network Layer
 package "Network Layer" {
     [HTTP/WebSocket] as Network
+    [API/DTO] as ApiDto
+}
+
+' Test Layer
+package "Test Layer" {
+    [Web Unit Tests] as WebTests
+    [Android Unit Tests] as AndroidTests
 }
 
 ' Relationships
-NextApp --> AdPage : uses
-NextApp --> AdCard : uses
-NextApp --> AdDetail : uses
-NextApp --> Styles : applies
+NextApp --> AppRouter : uses
+AppRouter --> Pages : routes
+Pages --> AdPage : uses
+AdPage --> AdCard : uses
+AdPage --> AdDetail : uses
+AdPage --> ApiLayer : fetches data
+ApiLayer --> StateMgmt : updates state
+ApiLayer --> WebRepo : uses
+WebRepo --> WebDataSource : uses
+WebDataSource --> Network : HTTP/WS
+ApiLayer --> WebDomain : uses
+StateMgmt --> Components : provides state
+Components --> Styles : applies
+Components --> WebUtils : uses
 
+MainActivity --> DI : injects
+MainActivity --> AdViewModel : observes
+AdViewModel --> AndroidRepo : fetches data
+AndroidRepo --> AndroidDataSource : data source
+AndroidDataSource --> Network : HTTP/WS
 MainActivity --> AdView : contains
-MainActivity --> SDK : initializes
-AdView --> Network : connects to
-Network --> NextApp : serves content
+AdView --> SDK : uses
+SDK --> SdkUtils : uses
+AdViewModel --> AndroidDomain : uses
+
+Network --> ApiDto : serializes
+ApiDto --> ApiLayer : used by
+
+WebTests --> NextApp
+AndroidTests --> MainActivity
 
 ' Data Flow
 AdView -down-> Network : HTTP Request
@@ -51,12 +101,17 @@ note right of NextApp
   - TypeScript
   - Tailwind CSS
   - App Router
+  - Zustand (State)
+  - API Layer
+  - Clean Architecture
 end note
 
 note right of MainActivity
   - Loads WebView
   - Connects to localhost:3000
   - Displays web content
+  - MVVM 구조
+  - Hilt DI
 end note
 
 @enduml

@@ -1,0 +1,38 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam monochrome true
+skinparam backgroundColor #F9F9F9
+skinparam ArrowColor Black
+skinparam ArrowFontColor Black
+skinparam defaultFontName "Nanum Gothic"
+
+title 노출형 광고(단순 방문 리워드) 전체 구조 및 흐름
+
+actor User as "사용자"
+participant "광고 페이지 (프론트엔드)" as AdPage
+participant "서버/백엔드" as Server
+database "DB" as DB
+
+== 방문 및 리워드 지급 흐름 ==
+
+User -> AdPage : 광고 페이지 접속
+activate AdPage
+AdPage -> Server : 방문 기록 전송 (adId, userId)
+activate Server
+Server -> DB : 방문 이력/중복 체크
+DB --> Server : 방문 이력 결과(신규/중복)
+alt 신규 방문
+    Server -> DB : 리워드 지급 기록 저장
+    Server --> AdPage : 리워드 지급 성공 응답
+    AdPage --> User : "리워드 지급 완료" 안내
+else 중복 방문
+    Server --> AdPage : 중복 방문 안내 응답
+    AdPage --> User : "이미 리워드 지급됨" 안내
+end
+deactivate Server
+deactivate AdPage
+
+@enduml

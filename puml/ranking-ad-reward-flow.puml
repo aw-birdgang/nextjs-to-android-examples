@@ -1,0 +1,36 @@
+@startuml
+!theme plain
+skinparam componentStyle uml2
+skinparam shadowing false
+skinparam roundcorner 15
+skinparam monochrome true
+skinparam backgroundColor #F9F9F9
+skinparam ArrowColor Black
+skinparam ArrowFontColor Black
+skinparam defaultFontName "Nanum Gothic"
+
+title 랭킹 부스팅형 광고(앱 내 액션 유도) 전체 구조 및 흐름
+
+actor User as "사용자"
+participant "앱" as App
+participant "서버/백엔드" as Server
+database "DB" as DB
+
+== 랭킹 부스팅형 광고 흐름 ==
+
+User -> App : 앱 내 특정 액션(검색, 장소 저장 등) 수행
+App -> Server : 액션 발생 정보 전송 (userId, adId, actionType 등)
+activate Server
+Server -> DB : 액션 내역 및 중복/조건 체크
+DB --> Server : 결과(신규/중복/조건 충족 여부)
+alt 조건 충족(신규, 유효 액션)
+    Server -> DB : 리워드 지급 기록 저장
+    Server --> App : 리워드 지급 성공 응답
+    App --> User : "리워드 지급 완료" 안내
+else 조건 미충족/중복
+    Server --> App : 미지급/중복 안내 응답
+    App --> User : "조건 미충족" 또는 "이미 리워드 지급됨" 안내
+end
+deactivate Server
+
+@enduml

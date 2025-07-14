@@ -1,18 +1,15 @@
 pluginManagement {
     repositories {
-        google()
-        mavenCentral()
         gradlePluginPortal()
+        google()         // ← 반드시 필요!
+        mavenCentral()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
 }
-
 rootProject.name = "android-sdk"
-include(":samplesdk")
-include(":sample-app")
+include(":samplesdk", ":sample-app")

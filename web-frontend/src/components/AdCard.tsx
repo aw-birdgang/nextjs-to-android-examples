@@ -1,33 +1,50 @@
-import React from "react";
-import { Ad } from "../types/ad";
+import { Ad } from "../domain/entities/Ad";
+import Link from "next/link";
+import Image from "next/image";
 
 interface AdCardProps {
   ad: Ad;
-  onClick?: () => void;
 }
 
-export default function AdCard({ ad, onClick }: AdCardProps) {
+export default function AdCard({ ad }: AdCardProps) {
   return (
-    <div
-      style={{
+    <Link href={`/ads/${ad.id}`}>
+      <div style={{
         border: "1px solid #ccc",
         margin: 8,
         padding: 16,
         borderRadius: 8,
         background: "#fff",
-        cursor: onClick ? "pointer" : "default",
-      }}
-      onClick={onClick}
-    >
-      <img src={ad.image} alt={ad.title} width={100} style={{ borderRadius: 8 }} />
-      <h2>{ad.title}</h2>
-      <p>{ad.description}</p>
-      <div>
-        <b>리워드:</b> {ad.reward}
+        cursor: "pointer",
+        width: 300,
+      }}>
+        <Image
+          src={ad.image}
+          alt={ad.title}
+          width={280}
+          height={140}
+          style={{ borderRadius: 8, objectFit: "cover" }}
+          unoptimized // 개발 중 외부 이미지나 로컬 이미지 캐싱 문제 방지
+        />
+        <h2 style={{ margin: "8px 0 4px 0" }}>{ad.title}</h2>
+        <p style={{ color: "#666", fontSize: 14 }}>{ad.description}</p>
+        <div style={{ marginTop: 8 }}>
+          <b>리워드:</b> {ad.reward}
+        </div>
+        <div style={{ fontSize: 12, color: "#888" }}>
+          <b>유형:</b> {ad.type}
+        </div>
+        {!ad.isActive && (
+          <div style={{ 
+            fontSize: 12, 
+            color: "#ff4444", 
+            fontWeight: "bold",
+            marginTop: 4 
+          }}>
+            비활성화됨
+          </div>
+        )}
       </div>
-      <div>
-        <b>유형:</b> {ad.type}
-      </div>
-    </div>
+    </Link>
   );
 }

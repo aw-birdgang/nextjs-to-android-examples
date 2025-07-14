@@ -1,22 +1,21 @@
 // src/app/ads/[id]/page.tsx
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
+import AdDetailClient from './AdDetailClient';
+import { AdDataSource } from '../../../data/datasources/AdDataSource';
 
-interface Props {
-  params: { id: string };
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function AdDetailPage({ params }: Props) {
-  const { id } = params;
+export default async function AdDetailPage({ params }: PageProps) {
+  const { id } = await params;
+  const dataSource = new AdDataSource();
+  const ad = await dataSource.getAdById(id);
 
-  // 실제 광고 데이터 fetch 또는 mock 데이터 사용
-  // const ad = fetchAdById(id);
-  // if (!ad) return notFound();
+  if (!ad) {
+    notFound();
+  }
 
-  return (
-    <div>
-      <h1>광고 상세 페이지</h1>
-      <p>광고 ID: {id}</p>
-      {/* 광고 상세 내용 렌더링 */}
-    </div>
-  );
+  return <AdDetailClient ad={ad} />;
 }
