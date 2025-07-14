@@ -14,7 +14,6 @@ npm install
 ```bash
 npm run dev
 ```
-
 - 기본적으로 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
 
 ### 1-3. 프로덕션 빌드
@@ -87,6 +86,8 @@ adb shell am start -n com.example.sample_app/.MainActivity
   - 에뮬레이터에서는 `10.0.2.2:3000`으로 접근해야 합니다.
 - **Gradle/플러그인 버전 경고**
   - 최신 Android Studio/Gradle로 업그레이드 권장 (경고는 무시해도 빌드/실행 가능)
+- **포트 충돌/방화벽 문제**
+  - 3000번 포트가 열려 있는지, 방화벽/보안 소프트웨어가 차단하지 않는지 확인하세요.
 
 ---
 
@@ -95,6 +96,6 @@ adb shell am start -n com.example.sample_app/.MainActivity
 - **Android Studio**에서 `android-sdk` 폴더만 "Open as Project" 하세요.
 - **web-frontend**는 VSCode 등에서 별도로 관리하면 편리합니다.
 - 추가적인 구조/아키텍처 설명은 [puml/architecture.puml](puml/architecture.puml) 참고
+- 각 프로젝트는 독립적으로 관리됩니다. (web-frontend: Node/Next.js, android-sdk: Gradle/Android)
 
 ---
-
