@@ -5,12 +5,12 @@ import AdTypeCard from '../components/AdTypeCard';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          광고 타입 선택
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-black text-gray-900 mb-12 text-center drop-shadow-sm">
+          🎯 광고 타입 선택
         </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {AD_TYPES.map((type) => (
             <AdTypeCard
               key={type.key}

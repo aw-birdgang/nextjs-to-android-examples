@@ -1,6 +1,3 @@
-// web-frontend/src/app/ads/action/dummyActionApi.ts (추가)
-
-// 더미 DB (메모리)
 const actionHistory: { [key: string]: boolean } = {};
 
 // 외부 서비스 → 서버 → DB → 리워드 지급/중복 체크 더미

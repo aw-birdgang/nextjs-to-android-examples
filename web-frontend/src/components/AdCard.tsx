@@ -9,39 +9,27 @@ interface AdCardProps {
 export default function AdCard({ ad }: AdCardProps) {
   return (
     <Link href={`/ads/${ad.id}`}>
-      <div style={{
-        border: "1px solid #ccc",
-        margin: 8,
-        padding: 16,
-        borderRadius: 8,
-        background: "#fff",
-        cursor: "pointer",
-        width: 300,
-      }}>
-        <Image
-          src={ad.image}
-          alt={ad.title}
-          width={280}
-          height={140}
-          style={{ borderRadius: 8, objectFit: "cover" }}
-          unoptimized // 개발 중 외부 이미지나 로컬 이미지 캐싱 문제 방지
-        />
-        <h2 style={{ margin: "8px 0 4px 0" }}>{ad.title}</h2>
-        <p style={{ color: "#666", fontSize: 14 }}>{ad.description}</p>
-        <div style={{ marginTop: 8 }}>
-          <b>리워드:</b> {ad.reward}
+      <div className="border-2 border-gray-200 m-3 p-6 rounded-2xl bg-white cursor-pointer w-80 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:border-blue-300">
+        <div className="relative w-full h-40 rounded-xl overflow-hidden mb-4 border-2 border-gray-100">
+          <Image
+            src={ad.image}
+            alt={ad.title}
+            fill
+            className="object-cover"
+            unoptimized
+          />
         </div>
-        <div style={{ fontSize: 12, color: "#888" }}>
-          <b>유형:</b> {ad.type}
+        <h2 className="text-xl font-black text-gray-900 mb-3 leading-tight">{ad.title}</h2>
+        <p className="text-gray-700 text-sm mb-4 font-medium leading-relaxed">{ad.description}</p>
+        <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl p-4 mb-3 shadow-lg">
+          <span className="font-black text-lg">💰 리워드: {ad.reward}</span>
+        </div>
+        <div className="text-sm text-gray-600 font-semibold bg-gray-50 rounded-lg px-3 py-2">
+          <span className="font-bold">📋 유형:</span> {ad.type}
         </div>
         {!ad.isActive && (
-          <div style={{ 
-            fontSize: 12, 
-            color: "#ff4444", 
-            fontWeight: "bold",
-            marginTop: 4 
-          }}>
-            비활성화됨
+          <div className="text-sm text-white font-black mt-3 bg-red-500 border-2 border-red-600 rounded-xl px-4 py-2 text-center">
+            ⚠️ 비활성화됨
           </div>
         )}
       </div>
