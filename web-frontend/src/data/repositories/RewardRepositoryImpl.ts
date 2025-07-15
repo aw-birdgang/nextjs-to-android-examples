@@ -6,6 +6,13 @@ export class RewardRepositoryImpl implements IRewardRepository {
   private readonly REWARDS_KEY = 'rewards';
 
   async claimReward(adId: string, userId: string): Promise<Reward> {
+    // 중복 체크
+    const existingRewards = LocalStorage.get<Reward[]>(this.REWARDS_KEY) || [];
+    const alreadyClaimed = existingRewards.find(r => r.adId === adId && r.userId === userId && r.status === 'completed');
+    if (alreadyClaimed) {
+      throw new Error('이미 완료한 광고입니다.');
+    }
+
     const reward: Reward = {
       id: `reward-${Date.now()}`,
       adId,
@@ -16,9 +23,8 @@ export class RewardRepositoryImpl implements IRewardRepository {
     };
 
     // Store reward
-    const rewards = LocalStorage.get<Reward[]>(this.REWARDS_KEY) || [];
-    rewards.push(reward);
-    LocalStorage.set(this.REWARDS_KEY, rewards);
+    existingRewards.push(reward);
+    LocalStorage.set(this.REWARDS_KEY, existingRewards);
 
     // Simulate processing
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -26,7 +32,7 @@ export class RewardRepositoryImpl implements IRewardRepository {
     // Update status to completed
     reward.status = 'completed';
     reward.claimedAt = new Date();
-    LocalStorage.set(this.REWARDS_KEY, rewards);
+    LocalStorage.set(this.REWARDS_KEY, existingRewards);
 
     return reward;
   }

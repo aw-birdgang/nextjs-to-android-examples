@@ -7,9 +7,12 @@ interface AdDetailProps {
   ad: Ad;
   onBack: () => void;
   onRewardClaim: () => void;
+  rewardStatus?: 'success' | 'duplicate' | null; // (추가)
+  rewardAmount?: number | null;                  // (추가)
+  claiming?: boolean;                            // (추가)
 }
 
-export default function AdDetail({ ad, onBack, onRewardClaim }: AdDetailProps) {
+export default function AdDetail({ ad, onBack, onRewardClaim, rewardStatus, rewardAmount, claiming }: AdDetailProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 p-6">
       <div className="max-w-lg mx-auto">
@@ -58,13 +61,26 @@ export default function AdDetail({ ad, onBack, onRewardClaim }: AdDetailProps) {
             </div>
           </div>
 
-          {/* 참여 버튼 */}
-          <button
-            onClick={onRewardClaim}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 px-8 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-105 shadow-2xl border-2 border-blue-500"
-          >
-            🎁 리워드 받기
-          </button>
+          {/* 참여 버튼 및 안내 메시지 */}
+          <div>
+            {rewardStatus === 'success' && (
+              <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-xl font-bold text-center">
+                🎉 리워드 지급 완료! {rewardAmount}원 지급됨
+              </div>
+            )}
+            {rewardStatus === 'duplicate' && (
+              <div className="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded-xl font-bold text-center">
+                ⚠️ 이미 리워드가 지급된 광고입니다.
+              </div>
+            )}
+            <button
+              onClick={onRewardClaim}
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 px-8 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-105 shadow-2xl border-2 border-blue-500"
+              disabled={rewardStatus === 'success' || rewardStatus === 'duplicate' || claiming}
+            >
+              {claiming ? "처리 중..." : "🎁 리워드 받기"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
