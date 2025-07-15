@@ -11,11 +11,12 @@ interface AdDetailClientProps {
 
 export default function AdDetailClient({ ad }: AdDetailClientProps) {
   const { claimReward, claiming, rewardError } = useAdContext();
-  const [rewardStatus, setRewardStatus] = useState<null | 'success' | 'duplicate'>(null);
+  const [rewardStatus, setRewardStatus] = useState<null | 'success' | 'duplicate' | 'error'>(null);
   const [rewardAmount, setRewardAmount] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // (추가) 노출형 광고라면 진입 시 자동 리워드 지급 시도
+    // 노출형 광고라면 진입 시 자동 리워드 지급 시도
     if (ad.type === 'expose') {
       handleRewardClaim();
     }
@@ -31,9 +32,22 @@ export default function AdDetailClient({ ad }: AdDetailClientProps) {
     if (result) {
       setRewardStatus('success');
       setRewardAmount(result.amount);
-    } else if (rewardError?.includes('이미 완료')) {
-      setRewardStatus('duplicate');
+      setErrorMessage(null);
+    } else if (rewardError) {
+      if (rewardError.type === 'already_completed') {
+        setRewardStatus('duplicate');
+        setErrorMessage(null);
+      } else {
+        setRewardStatus('error');
+        setErrorMessage(rewardError.message);
+      }
     }
+  };
+
+  const handleRetry = () => {
+    setRewardStatus(null);
+    setErrorMessage(null);
+    handleRewardClaim();
   };
 
   return (
@@ -41,9 +55,11 @@ export default function AdDetailClient({ ad }: AdDetailClientProps) {
       ad={ad}
       onBack={handleBack}
       onRewardClaim={handleRewardClaim}
-      rewardStatus={rewardStatus} // (추가)
-      rewardAmount={rewardAmount} // (추가)
-      claiming={claiming}         // (추가)
+      onRetry={handleRetry}
+      rewardStatus={rewardStatus}
+      rewardAmount={rewardAmount}
+      claiming={claiming}
+      errorMessage={errorMessage}
     />
   );
 }

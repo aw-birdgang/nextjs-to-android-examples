@@ -7,12 +7,26 @@ interface AdDetailProps {
   ad: Ad;
   onBack: () => void;
   onRewardClaim: () => void;
-  rewardStatus?: 'success' | 'duplicate' | null; // (추가)
-  rewardAmount?: number | null;                  // (추가)
-  claiming?: boolean;                            // (추가)
+  onRetry?: () => void;
+  rewardStatus?: 'success' | 'duplicate' | 'error' | null;
+  rewardAmount?: number | null;
+  claiming?: boolean;
+  errorMessage?: string | null;
 }
 
-export default function AdDetail({ ad, onBack, onRewardClaim, rewardStatus, rewardAmount, claiming }: AdDetailProps) {
+export default function AdDetail({ 
+  ad, 
+  onBack, 
+  onRewardClaim, 
+  onRetry,
+  rewardStatus, 
+  rewardAmount, 
+  claiming,
+  errorMessage 
+}: AdDetailProps) {
+  const isCompleted = rewardStatus === 'success' || rewardStatus === 'duplicate';
+  const isError = rewardStatus === 'error';
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 p-6">
       <div className="max-w-lg mx-auto">
@@ -61,25 +75,55 @@ export default function AdDetail({ ad, onBack, onRewardClaim, rewardStatus, rewa
             </div>
           </div>
 
-          {/* 참여 버튼 및 안내 메시지 */}
-          <div>
-            {rewardStatus === 'success' && (
-              <div className="mb-4 p-4 bg-green-100 text-green-800 rounded-xl font-bold text-center">
-                🎉 리워드 지급 완료! {rewardAmount}원 지급됨
-              </div>
+          {/* 상태 메시지 */}
+          {rewardStatus === 'success' && (
+            <div className="mb-6 p-4 bg-green-100 border-2 border-green-300 text-green-800 rounded-xl font-bold text-center">
+              🎉 리워드 지급 완료! {rewardAmount}원 지급됨
+            </div>
+          )}
+          
+          {rewardStatus === 'duplicate' && (
+            <div className="mb-6 p-4 bg-yellow-100 border-2 border-yellow-300 text-yellow-800 rounded-xl font-bold text-center">
+              ✅ 이미 완료한 광고입니다! 다른 광고도 확인해보세요 🎯
+            </div>
+          )}
+          
+          {isError && errorMessage && (
+            <div className="mb-6 p-4 bg-red-100 border-2 border-red-300 text-red-800 rounded-xl font-bold text-center">
+              ❌ {errorMessage}
+            </div>
+          )}
+
+          {/* 액션 버튼 */}
+          <div className="space-y-3">
+            {!isCompleted && !isError && (
+              <button
+                onClick={onRewardClaim}
+                disabled={claiming}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 px-8 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-105 shadow-2xl border-2 border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              >
+                {claiming ? "처리 중..." : "🎁 리워드 받기"}
+              </button>
             )}
-            {rewardStatus === 'duplicate' && (
-              <div className="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded-xl font-bold text-center">
-                ⚠️ 이미 리워드가 지급된 광고입니다.
-              </div>
+            
+            {isError && onRetry && (
+              <button
+                onClick={onRetry}
+                disabled={claiming}
+                className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-4 px-8 rounded-2xl font-black text-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-orange-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {claiming ? "재시도 중..." : "🔄 다시 시도"}
+              </button>
             )}
-            <button
-              onClick={onRewardClaim}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 px-8 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 hover:scale-105 shadow-2xl border-2 border-blue-500"
-              disabled={rewardStatus === 'success' || rewardStatus === 'duplicate' || claiming}
-            >
-              {claiming ? "처리 중..." : "🎁 리워드 받기"}
-            </button>
+            
+            {isCompleted && (
+              <button
+                onClick={onBack}
+                className="w-full bg-gradient-to-r from-gray-500 to-gray-600 text-white py-4 px-8 rounded-2xl font-black text-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-xl border-2 border-gray-400"
+              >
+                📋 다른 광고 보기
+              </button>
+            )}
           </div>
         </div>
       </div>

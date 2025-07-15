@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, ReactNode } from 'react';
 import { useAds } from '../hooks/useAds';
-import { useReward } from '../hooks/useReward';
+import { useReward, RewardError } from '../hooks/useReward';
 import { Ad, Reward } from '../../domain/entities/Ad';
 
 interface AdContextType {
@@ -11,7 +11,8 @@ interface AdContextType {
   error: string | null;
   claimReward: (adId: string) => Promise<Reward | null>;
   claiming: boolean;
-  rewardError: string | null;
+  rewardError: RewardError | null;
+  clearRewardError: () => void;
 }
 
 const AdContext = createContext<AdContextType | undefined>(undefined);
@@ -30,7 +31,7 @@ interface AdProviderProps {
 
 export const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
   const { ads, loading, error } = useAds();
-  const { claimReward, claiming, error: rewardError } = useReward();
+  const { claimReward, claiming, error: rewardError, clearError } = useReward();
 
   const value: AdContextType = {
     ads,
@@ -38,7 +39,8 @@ export const AdProvider: React.FC<AdProviderProps> = ({ children }) => {
     error,
     claimReward,
     claiming,
-    rewardError
+    rewardError,
+    clearRewardError: clearError
   };
 
   return (
